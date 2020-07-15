@@ -41,12 +41,13 @@ $result = $db->query($sql);
                     // output data of each row
                     while($row = $result->fetch_assoc()) {
                         echo '<tr>
-                                <td>'.$row["id"].'</td>
+                                <td>'.$row["people_id"].'</td>
                                 <td>'.$row["screen_name"].' </span> </td>
                                 <td>'.$row["first_name"].'</td>
                                 <td>'.$row["middle_name"].'</td>
                                 <td>'.$row["last_name"].'</td>
                                 <td>'.$row["image_name"].'</td>
+                                <td><a class="btn btn-info btn-sm" href="people_info.php?people_id='.$row["people_id"].'">Display</a>
                             </tr>';
                     }//end while
                 }//end if

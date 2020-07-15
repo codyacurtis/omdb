@@ -64,3 +64,16 @@ UPDATE song_people SET song_id = '3', people_id = '28', role = 'backup singer' W
 /*Query 7.30 Delete a relation between a movie and a people (including role and screen name)
 Assigned to Isiah Taylor*/
 DELETE FROM movie_people WHERE movie_id = 1;
+
+/*Query 7.68 Return the movie with most number of anagrams
+Assigned to Cody Curtis*/
+SELECT movies.english_name, COUNT(movie_anagrams.anagram) AS Anagram_Count
+FROM movies
+INNER JOIN movie_anagrams
+ON movies.movie_id = movie_anagrams.movie_id
+GROUP BY movies.movie_id
+ORDER BY Anagram_Count DESC
+LIMIT 1;
+
+/*Query 7.66 Given a string X, return all the movies whose length (i.e the length of native name) is equal to the length of String X
+Assinged to Isiah Taylor*/

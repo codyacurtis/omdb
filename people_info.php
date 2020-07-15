@@ -93,7 +93,7 @@ image_name
 
 
     // query string for the Query A
-    $sql_A = "SELECT stage_name, first_name, middle_name, last_name, gender, image_name 
+    $sql_A = "SELECT people_id, screen_name, first_name, middle_name, last_name, gender, image_name 
               FROM people 
               WHERE people_id =". $people_id;
 
@@ -103,13 +103,14 @@ image_name
 
     if ($sql_A_result->num_rows > 0) {
       $a_tuple = $sql_A_result->fetch_assoc();
-      echo '<br> People ID : ' . $a1_tuple["people_id"] .
-        '<br> Stage Name : ' . $a1_tuple["native_name"] .
-        '<br> First Name : ' . $a1_tuple["english_name"] .
-        '<br> Middle Name :  ' . $a1_tuple["year_made"].
-        '<br> Last Name :  ' . $a1_tuple["year_made"].
-        '<br> Gender :  ' . $a1_tuple["year_made"].
-        '<br> image_name :  ' . $a1_tuple["year_made"];
+      echo '<br> People ID : ' . $a_tuple["people_id"] .
+        '<br> Screen Name : ' . $a_tuple["screen_name"] .
+        '<br> First Name : ' . $a_tuple["first_name"] .
+        '<br> Middle Name :  ' . $a_tuple["middle_name"].
+        '<br> Last Name :  ' . $a_tuple["last_name"].
+        '<br> Gender :  ' . $a_tuple["gender"].
+        '<br> image_name :  ' . $a_tuple["image_name"].
+        '<br><img src="images/'.$a_tuple["image_name"].'" style="width:100px;height:120px;">';
     } //end if
     else {
       echo "0 results";

@@ -3406,6 +3406,51 @@ CREATE TABLE `song_trivia` (
 --
 
 --
+-- Table structure for table `movie_anagrams`
+--
+
+CREATE TABLE `movie_anagrams` (
+  `movie_id` int(6) NOT NULL COMMENT 'movie_anagrams is a WEAK entity. movie_id is both PK and FK',
+  `anagram` varchar(180) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'anagram of native name'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `movie_anagrams`
+--
+ALTER TABLE `movie_anagrams`
+  ADD PRIMARY KEY (`movie_id`,`anagram`);
+COMMIT;
+
+--
+-- Table structure for table `movie_numbers`
+--
+
+CREATE TABLE `movie_numbers` (
+  `movie_id` int(6) NOT NULL COMMENT 'This is both PK and FK; movie_numbers is a WEAK entity',
+  `running_time` int(3) DEFAULT NULL COMMENT 'Running Time in Minutes',
+  `length` int(2) DEFAULT NULL COMMENT 'length (depends on the native_name)',
+  `strength` int(2) DEFAULT NULL COMMENT 'strengh (depends on the native_name)',
+  `weight` int(2) DEFAULT NULL COMMENT 'weight (depends on native name)',
+  `budget` int(8) DEFAULT NULL COMMENT 'budget in local (native) currency',
+  `box_office` int(8) DEFAULT NULL COMMENT 'box office numbers in local (native) currency'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `movie_numbers`
+--
+ALTER TABLE `movie_numbers`
+  ADD PRIMARY KEY (`movie_id`);
+COMMIT;
+
+--
 -- Indexes for table `movies`
 --
 ALTER TABLE `movies`
@@ -3506,6 +3551,18 @@ ALTER TABLE `movies`
   MODIFY `movie_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3006;
 
 --
+-- AUTO_INCREMENT for table `people`
+--
+ALTER TABLE `people`
+  MODIFY `people_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
+-- AUTO_INCREMENT for table `songs`
+--
+ALTER TABLE `songs`
+  MODIFY `song_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -3514,6 +3571,20 @@ ALTER TABLE `movies`
 --
 ALTER TABLE `movie_data`
   ADD CONSTRAINT `movie_data_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+--
+-- Constraints for table `movie_anagrams`
+--
+ALTER TABLE `movie_anagrams`
+  ADD CONSTRAINT `movie_anagrams_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+--
+-- Constraints for table `movie_anagrams`
+--
+ALTER TABLE `movie_numbers`
+  ADD CONSTRAINT `movie_numbers_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

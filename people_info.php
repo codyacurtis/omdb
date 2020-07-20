@@ -149,7 +149,7 @@ No of Songs as Music Director:
     <?php
 
 
-    // query string for the Query A
+    // query string for the Query B
     $sql_B = "SELECT COUNT(role),role
               FROM movie_people
               WHERE people_id = $people_id
@@ -224,3 +224,51 @@ No of Songs as Music Director:
 </style>
 
 <?php include("./footer.php"); ?>
+
+
+<!-- ================ [D]======================
+
+[D} PEOPLE - Songs
+
+Display Type: Show this as a table
+
+song_id
+title 
+lyrics (show first 30 characters)
+role (from song_people)
+========================================================================= -->
+  <div class="right-content">
+  <div class="container">
+        <h3 style="color: #01B0F1;">[D] People -> Songs </h3>
+    <?php
+
+
+    // query string for the Query D
+    $sql_D = "SELECT songs.song_id, songs.title,SUBSTRING(songs.lyrics, 1, 30) AS lyrics, song_people.role   
+              FROM songs
+              INNER JOIN song_people
+              ON songs.song_id = song_people.song_id
+              WHERE song_people.people_id =". $people_id;
+
+              
+    if (!$sql_D_result = $db->query($sql_D)) {
+      die('There was an error running query[' . $connection->error . ']');
+    }
+
+    if ($sql_D_result->num_rows > 0) {
+      $a_tuple = $sql_D_result->fetch_assoc();
+      echo '<br> Song ID : ' . $a_tuple["song_id"] .
+           '<br> Title : ' . $a_tuple["title"] .
+           '<br> Lyrics : ' . $a_tuple["lyrics"] .
+           '<br> Role:  ' . $a_tuple["role"].
+           '</span> </td></tr>';
+
+    } //end if
+    else {
+      echo "0 results";
+    } //end else
+
+    $sql_D_result->close();
+    ?>
+  </div>
+</div>

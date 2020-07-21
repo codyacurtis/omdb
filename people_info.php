@@ -9,6 +9,8 @@ require 'db_configuration.php';
 global $db;
 ?>
 
+
+
 <!-- =====================================================================================================
 
 This page displays the information about people given a people_id.
@@ -178,6 +180,50 @@ No of Songs as Music Director:
 </div>
 
 
+<!-- ================ [C]======================
+
+[C} PEOPLE - movies
+
+Display Type: Show this as a table
+
+movie_id
+native_name 
+english_name
+year_made, role
+screen_name
+========================================================================= -->
+<div class="right-content">
+  <div class="container">
+    <h3 style="color: #01B0F1;">[C] People -> Movie Data</h3>
+
+    <?php
+
+
+    // query string for the Query C
+    $sql_C = "SELECT movies.movie_id, native_name, english_name, year_made, role, character_name 
+    FROM movie_people LEFT JOIN movies on movies.movie_id = movie_people.movie_id where people_id =". $people_id;
+
+    if (!$sql_C_result = $db->query($sql_C)) {
+      die('There was an error running query[' . $connection->error . ']');
+    }
+
+    if ($sql_C_result->num_rows > 0) {
+      $a_tuple = $sql_C_result->fetch_assoc();
+      echo '<br> Movie ID : ' . $a_tuple["movie_id"] .
+        '<br> Native Name : ' . $a_tuple["native_name"] .
+        '<br> English Name : ' . $a_tuple["english_name"] .
+        '<br> Year Made :  ' . $a_tuple["year_made"].
+        '<br> Role :  ' . $a_tuple["role"].
+        '<br> Character Name :  ' . $a_tuple["character_name"];
+    } //end if
+    else {
+      echo "0 results";
+    } //end else
+
+    $sql_C_result->close();
+    ?>
+  </div>
+</div>
 
 <!-- ================== JQuery Data Table script ================================= -->
 

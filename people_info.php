@@ -141,7 +141,7 @@ No of Songs as Music Director:
 
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[B.1] People  (table: movie_people and people)</h3>
+    <h3 style="color: #01B0F1;">[B] People -> Roles</h3>
     <table>
     <tr>
       <th>role</th>
@@ -195,6 +195,19 @@ screen_name
 <div class="right-content">
   <div class="container">
     <h3 style="color: #01B0F1;">[C] People -> Movie Data</h3>
+    <table class="display" id="movies" style="width:100%">
+          <div class="table responsive">
+
+    <thread>
+    <tr>
+      <th>Movie ID</th>
+      <th>Native Title</th>
+      <th>English Title</th>
+      <th>Year Made</th>
+      <th>Role</th>
+      <th>Character Name</th>
+    </tr>    
+    </thread>
 
     <?php
 
@@ -208,22 +221,83 @@ screen_name
     }
 
     if ($sql_C_result->num_rows > 0) {
-      $a_tuple = $sql_C_result->fetch_assoc();
-      echo '<br> Movie ID : ' . $a_tuple["movie_id"] .
-        '<br> Native Name : ' . $a_tuple["native_name"] .
-        '<br> English Name : ' . $a_tuple["english_name"] .
-        '<br> Year Made :  ' . $a_tuple["year_made"].
-        '<br> Role :  ' . $a_tuple["role"].
-        '<br> Character Name :  ' . $a_tuple["character_name"];
+      while($a_tuple = $sql_C_result->fetch_assoc()) {
+      echo '<tr> 
+        <td>' . $a_tuple["movie_id"].'</td>
+        <td>' . $a_tuple["native_name"].'</td>
+        <td>' . $a_tuple["english_name"].'</td>
+        <td>' . $a_tuple["year_made"].'</td>
+        <td>' . $a_tuple["role"].'</td>
+        <td>' . $a_tuple["character_name"].'</td>
+      </tr>';
+      } 
     } //end if
-    else {
-      echo "0 results";
-    } //end else
 
     $sql_C_result->close();
     ?>
+    </table>
   </div>
 </div>
+
+<!-- ================ [D]======================
+
+[D} PEOPLE - Songs
+
+Display Type: Show this as a table
+
+song_id
+title 
+lyrics (show first 30 characters)
+role (from song_people)
+========================================================================= -->
+<div class="right-content">
+    <div class="container">
+      <h3 style="color: #01B0F1;">[D] People -> Songs </h3>
+        
+        <table class="display" id="songs" style="width:100%">
+          <div class="table responsive">
+
+            <thread>
+    <tr>
+      <th>Song ID</th>
+      <th>Title</th>
+      <th>Lyrics</th>
+      <th>Role</th>
+    </tr>    
+    </thread>
+    <?php
+
+
+    // query string for the Query D
+    $sql_D = "SELECT songs.song_id, songs.title, SUBSTRING(songs.lyrics, 1, 30) AS lyrics, song_people.role   
+              FROM songs
+              INNER JOIN song_people
+              ON songs.song_id = song_people.song_id
+              WHERE song_people.people_id =". $people_id;
+
+              
+    if (!$sql_D_result = $db->query($sql_D)) {
+      die('There was an error running query[' . $connection->error . ']');
+    }
+
+    if ($sql_D_result -> num_rows > 0) {
+      while($d_tuple = $sql_D_result -> fetch_assoc()) {
+          echo '<tr>
+            <td>' . $d_tuple["song_id"].'</td>
+            <td>' . $d_tuple["title"].'</td>
+            <td>' . $d_tuple["lyrics"].'</td>
+            <td>' . $d_tuple["role"].'</td>
+          </tr>';
+      }
+
+    } //end if
+
+    $sql_D_result->close();
+    ?>
+    </table>
+  </div>
+</div>
+
 
 <!-- ================== JQuery Data Table script ================================= -->
 
@@ -271,50 +345,3 @@ screen_name
 
 <?php include("./footer.php"); ?>
 
-
-<!-- ================ [D]======================
-
-[D} PEOPLE - Songs
-
-Display Type: Show this as a table
-
-song_id
-title 
-lyrics (show first 30 characters)
-role (from song_people)
-========================================================================= -->
-  <div class="right-content">
-  <div class="container">
-        <h3 style="color: #01B0F1;">[D] People -> Songs </h3>
-    <?php
-
-
-    // query string for the Query D
-    $sql_D = "SELECT songs.song_id, songs.title,SUBSTRING(songs.lyrics, 1, 30) AS lyrics, song_people.role   
-              FROM songs
-              INNER JOIN song_people
-              ON songs.song_id = song_people.song_id
-              WHERE song_people.people_id =". $people_id;
-
-              
-    if (!$sql_D_result = $db->query($sql_D)) {
-      die('There was an error running query[' . $connection->error . ']');
-    }
-
-    if ($sql_D_result->num_rows > 0) {
-      $a_tuple = $sql_D_result->fetch_assoc();
-      echo '<br> Song ID : ' . $a_tuple["song_id"] .
-           '<br> Title : ' . $a_tuple["title"] .
-           '<br> Lyrics : ' . $a_tuple["lyrics"] .
-           '<br> Role:  ' . $a_tuple["role"].
-           '</span> </td></tr>';
-
-    } //end if
-    else {
-      echo "0 results";
-    } //end else
-
-    $sql_D_result->close();
-    ?>
-  </div>
-</div>

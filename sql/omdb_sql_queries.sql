@@ -75,5 +75,36 @@ GROUP BY movies.movie_id
 ORDER BY Anagram_Count DESC
 LIMIT 1;
 
+/*Query 7.55 Give me the list of all the movies based on a genre (“genre” is the input)
+Assigned to #55 Geoff Jordan*/
+Select native_name, genre
+from movies
+RIGHT outer join movie_data
+on movies.movie_id = movie_data.movie_id
+where genre = "Musical";
+
 /*Query 7.66 Given a string X, return all the movies whose length (i.e the length of native name) is equal to the length of String X
 Assinged to Isiah Taylor*/
+SELECT native_name FROM movies
+WHERE(LENGTH(movies.native_name)) = LENGTH("toxic");
+
+/*7.48: Give me the list of all songs written by a lyricist (or a song performed by a singer/performer)
+Assinged to Marshall Nquyen*/
+Select screen_name,title,lyrics
+FROM songs 
+RIGHT OUTER JOIN song_people
+on songs.song_id = song_people.song_id
+RIGHT OUTER JOIN people
+ON song_people.people_id = people.people_id
+where screen_name = "Frank Sinatra";
+
+/*Give me the list of all the movies that do NOT have any songs
+Assigned to Ben Hanson*/
+SELECT
+    movies.movie_id, 
+    movies.english_name,
+    movie_song.movie_id
+FROM
+    movies
+LEFT JOIN movie_song ON movies.movie_id = movie_song.movie_id
+WHERE movie_song.movie_id IS null;

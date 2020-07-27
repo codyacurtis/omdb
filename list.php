@@ -146,9 +146,9 @@ $GLOBALS['data'] = mysqli_query($db, $query);
             }
         }
 
-        if(isset($_GET['dishDeleted'])){
-            if($_GET["dishDeleted"] == "Success"){
-                echo '<br><h3>Success! Your dish has been deleted!</h3>';
+        if(isset($_GET['movieDeleted'])){
+            if($_GET["movieDeleted"] == "Success"){
+                echo '<br><h3>Success! Your Movie has been deleted!</h3>';
             }
         }
 
@@ -211,7 +211,7 @@ $GLOBALS['data'] = mysqli_query($db, $query);
                     <td><div contenteditable="true" onBlur="updateValue(this,'keyword_list','<?php echo $Movie_ID; ?>')"><?php echo $Key_Words; ?></div></span> </td>
                     <?php echo '<td><img src="images/'.$row["m_link"].'" style="width:100px;height:120px;">' ?>
                     <?php echo '<td><a class="btn btn-warning btn-sm" href="modifyDish.php?id='.$row["movie_id"].'">Modify</a></td>' ?>
-                    <?php echo '<td><a class="btn btn-danger btn-sm" href="deleteDish.php?id='.$row["movie_id"].'">Delete</a></td>' ?>
+                    <?php echo '<td><a class="btn btn-danger btn-sm" href="deleteTheMovie.php?id='.$row["movie_id"].'">Delete</a></td>' ?>
                 </tr>
 
                         <?php

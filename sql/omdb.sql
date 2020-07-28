@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 08, 2020 at 03:46 AM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.3.17
+-- Generation Time: Jul 28, 2020 at 02:53 AM
+-- Server version: 10.4.13-MariaDB
+-- PHP Version: 7.4.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -3046,7 +3046,19 @@ INSERT INTO `movies` (`movie_id`, `native_name`, `english_name`, `year_made`) VA
 (3002, 'Brother Nature', 'Brother Nature', 2016),
 (3003, 'Barbie: Spy Squad', 'Barbie: Spy Squad', 2016),
 (3004, 'Allied', 'Allied', 2016),
-(3005, 'The Monster', 'The Monster', 2016);
+(3005, 'The Monster', 'The Monster', 2016),
+(3006, 'test7', 'test7', 2000);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `movie_anagrams`
+--
+
+CREATE TABLE `movie_anagrams` (
+  `movie_id` int(6) NOT NULL COMMENT 'movie_anagrams is a WEAK entity. movie_id is both PK and FK',
+  `anagram` varchar(180) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'anagram of native name'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -3072,7 +3084,8 @@ INSERT INTO `movie_data` (`movie_id`, `language`, `country`, `genre`, `plot`, `t
 (2, 'ENG', 'US', 'Horror', 'Chris and his girlfriend Rose go upstate to visit her parents for the weekend. At first, Chris reads the family\'s overly accommodating behavior as nervous attempts to deal with their daughter\'s interracial relationship, but as the weekend progresses, a series of increasingly disturbing discoveries lead him to a truth that he never could have imagined.', ''),
 (3, 'ENG', 'US', 'Musical', 'Following their win at the world championship, the now separated Bellas reunite for one last singing competition at an overseas USO tour, but face a group who uses both instruments and voices.', ''),
 (4, 'ENG', 'US', 'drama', 'In Texas, after the death of his mother, the unemployed oil and gas worker Toby Howard is losing his ranch to the Texas Midlands Bank. Toby is divorced from his wife who lives with their two sons. When his brother Tanner Howard is released from the prison, they team up to rob agencies of the Texas Midlands Bank to raise money to pay the loan so that Toby may leave the real estate to his sons.', ''),
-(5, 'ENG', 'US', 'action, drama', 'When Beth Emhoff (Gwyneth Paltrow) returns to Minnesota from a Hong Kong business trip, she attributes the malaise she feels to jet lag. However, two days later, Beth is dead, and doctors tell her shocked husband (Matt Damon) that they have no idea what killed her. Soon, many others start to exhibit the same symptoms, and a global pandemic explodes. Doctors try to contain the lethal microbe, but society begins to collapse as a blogger (Jude Law) fans the flames of paranoia.\r\n', '');
+(5, 'ENG', 'US', 'action, drama', 'When Beth Emhoff (Gwyneth Paltrow) returns to Minnesota from a Hong Kong business trip, she attributes the malaise she feels to jet lag. However, two days later, Beth is dead, and doctors tell her shocked husband (Matt Damon) that they have no idea what killed her. Soon, many others start to exhibit the same symptoms, and a global pandemic explodes. Doctors try to contain the lethal microbe, but society begins to collapse as a blogger (Jude Law) fans the flames of paranoia.\r\n', ''),
+(3006, 'EN', 'USA', 'test7', 'test7', 'test7');
 
 -- --------------------------------------------------------
 
@@ -3104,7 +3117,8 @@ INSERT INTO `movie_keywords` (`movie_id`, `keyword`) VALUES
 (5, 'epidemic'),
 (5, 'infection'),
 (5, 'outbreak'),
-(5, 'virus');
+(5, 'virus'),
+(3006, 'test7');
 
 -- --------------------------------------------------------
 
@@ -3133,7 +3147,24 @@ INSERT INTO `movie_media` (`movie_media_id`, `m_link`, `m_link_type`, `movie_id`
 (7, 'pitch_perfect_3_poster.jpg', 'poster', 3),
 (8, 'joker_poster.jpg', 'poster', 1),
 (9, 'https://rb.gy/v21usc', 'Poster', 5),
-(10, 'https://www.youtube.com/watch?v=4sYSyuuLk5g', 'Trailer', 5);
+(10, 'https://www.youtube.com/watch?v=4sYSyuuLk5g', 'Trailer', 5),
+(11, 'test7', 'test7', 3006);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `movie_numbers`
+--
+
+CREATE TABLE `movie_numbers` (
+  `movie_id` int(6) NOT NULL COMMENT 'This is both PK and FK; movie_numbers is a WEAK entity',
+  `running_time` int(3) DEFAULT NULL COMMENT 'Running Time in Minutes',
+  `length` int(2) DEFAULT NULL COMMENT 'length (depends on the native_name)',
+  `strength` int(2) DEFAULT NULL COMMENT 'strengh (depends on the native_name)',
+  `weight` int(2) DEFAULT NULL COMMENT 'weight (depends on native name)',
+  `budget` int(8) DEFAULT NULL COMMENT 'budget in local (native) currency',
+  `box_office` int(8) DEFAULT NULL COMMENT 'box office numbers in local (native) currency'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -3238,6 +3269,30 @@ INSERT INTO `movie_trivia` (`movie_id`, `trivia`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `movie_viewtable`
+-- (See below for the actual view)
+--
+CREATE TABLE `movie_viewtable` (
+`movie_id` int(6)
+,`native_name` varchar(180)
+,`english_name` varchar(180)
+,`year_made` year(4)
+,`tag_line` varchar(500)
+,`language` varchar(10)
+,`country` varchar(20)
+,`genre` varchar(15)
+,`plot` varchar(500)
+,`cast` mediumtext
+,`keyword_list` mediumtext
+,`trivia_cat` mediumtext
+,`m_link_type` varchar(11)
+,`m_link` varchar(100)
+,`title` varchar(100)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `people`
 --
 
@@ -3302,7 +3357,7 @@ CREATE TABLE `people_trivia` (
 --
 
 CREATE TABLE `songs` (
-  `song_id` int(5) NOT NULL,
+  `song_id` int(6) NOT NULL,
   `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lyrics` varchar(6000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `theme` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -3401,60 +3456,30 @@ CREATE TABLE `song_trivia` (
   `song_trivia` varchar(750) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Indexes for dumped tables
---
+-- --------------------------------------------------------
 
 --
--- Table structure for table `movie_anagrams`
+-- Structure for view `movie_viewtable`
 --
+DROP TABLE IF EXISTS `movie_viewtable`;
 
-CREATE TABLE `movie_anagrams` (
-  `movie_id` int(6) NOT NULL COMMENT 'movie_anagrams is a WEAK entity. movie_id is both PK and FK',
-  `anagram` varchar(180) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'anagram of native name'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `movie_viewtable`  AS  select `movies`.`movie_id` AS `movie_id`,`movies`.`native_name` AS `native_name`,`movies`.`english_name` AS `english_name`,`movies`.`year_made` AS `year_made`,`movie_data`.`tag_line` AS `tag_line`,`movie_data`.`language` AS `language`,`movie_data`.`country` AS `country`,`movie_data`.`genre` AS `genre`,`movie_data`.`plot` AS `plot`,`cast_list`.`CAST` AS `cast`,`keywords_list`.`keyword_list` AS `keyword_list`,`trivia_list`.`trivia_cat` AS `trivia_cat`,`movie_media`.`m_link_type` AS `m_link_type`,`movie_media`.`m_link` AS `m_link`,`soundtrack_list`.`title` AS `title` from ((((((`movies` left join `movie_data` on(`movies`.`movie_id` = `movie_data`.`movie_id`)) left join (select `people_list`.`movie_id` AS `movie_id`,`people_list`.`screen_name` AS `screen_name`,`people_list`.`role` AS `role`,`people_list`.`image_name` AS `image_name`,group_concat(concat_ws(' - ',`people_list`.`role`,`people_list`.`screen_name`) separator '; ') AS `CAST` from (select `movie_people`.`movie_id` AS `movie_id`,`people`.`screen_name` AS `screen_name`,`movie_people`.`role` AS `role`,`people`.`image_name` AS `image_name` from (`movie_people` left join `people` on(`movie_people`.`people_id` = `people`.`people_id`))) `people_list`) `cast_list` on(`movies`.`movie_id` = `cast_list`.`movie_id`)) left join (select `song_list`.`movie_id` AS `movie_id`,`song_list`.`song_id` AS `song_id`,`song_list`.`title` AS `title`,group_concat(`song_list`.`title` separator ',') AS `soundtrack` from (select `movie_song`.`movie_id` AS `movie_id`,`movie_song`.`song_id` AS `song_id`,`songs`.`title` AS `title` from (`movie_song` left join `songs` on(`movie_song`.`song_id` = `songs`.`song_id`))) `song_list`) `soundtrack_list` on(`movies`.`movie_id` = `soundtrack_list`.`movie_id`)) left join (select `movie_keywords`.`movie_id` AS `movie_id`,`movie_keywords`.`keyword` AS `keyword`,group_concat(`movie_keywords`.`keyword` separator ', ') AS `keyword_list` from `movie_keywords` group by `movie_keywords`.`movie_id`) `keywords_list` on(`movies`.`movie_id` = `keywords_list`.`movie_id`)) left join (select `movie_trivia`.`movie_id` AS `movie_id`,`movie_trivia`.`trivia` AS `trivia`,group_concat(`movie_trivia`.`trivia` separator ', ') AS `trivia_cat` from `movie_trivia` group by `movie_trivia`.`movie_id`) `trivia_list` on(`movies`.`movie_id` = `trivia_list`.`movie_id`)) left join `movie_media` on(`movies`.`movie_id` = `movie_media`.`movie_id`)) where `movie_media`.`m_link_type` = 'poster' ;
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `movie_anagrams`
---
-ALTER TABLE `movie_anagrams`
-  ADD PRIMARY KEY (`movie_id`,`anagram`);
-COMMIT;
-
---
--- Table structure for table `movie_numbers`
---
-
-CREATE TABLE `movie_numbers` (
-  `movie_id` int(6) NOT NULL COMMENT 'This is both PK and FK; movie_numbers is a WEAK entity',
-  `running_time` int(3) DEFAULT NULL COMMENT 'Running Time in Minutes',
-  `length` int(2) DEFAULT NULL COMMENT 'length (depends on the native_name)',
-  `strength` int(2) DEFAULT NULL COMMENT 'strengh (depends on the native_name)',
-  `weight` int(2) DEFAULT NULL COMMENT 'weight (depends on native name)',
-  `budget` int(8) DEFAULT NULL COMMENT 'budget in local (native) currency',
-  `box_office` int(8) DEFAULT NULL COMMENT 'box office numbers in local (native) currency'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `movie_numbers`
---
-ALTER TABLE `movie_numbers`
-  ADD PRIMARY KEY (`movie_id`);
-COMMIT;
 
 --
 -- Indexes for table `movies`
 --
 ALTER TABLE `movies`
   ADD PRIMARY KEY (`movie_id`);
+
+--
+-- Indexes for table `movie_anagrams`
+--
+ALTER TABLE `movie_anagrams`
+  ADD PRIMARY KEY (`movie_id`,`anagram`);
 
 --
 -- Indexes for table `movie_data`
@@ -3473,6 +3498,12 @@ ALTER TABLE `movie_keywords`
 --
 ALTER TABLE `movie_media`
   ADD PRIMARY KEY (`movie_media_id`);
+
+--
+-- Indexes for table `movie_numbers`
+--
+ALTER TABLE `movie_numbers`
+  ADD PRIMARY KEY (`movie_id`);
 
 --
 -- Indexes for table `movie_people`
@@ -3548,7 +3579,13 @@ ALTER TABLE `song_trivia`
 -- AUTO_INCREMENT for table `movies`
 --
 ALTER TABLE `movies`
-  MODIFY `movie_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3006;
+  MODIFY `movie_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3007;
+
+--
+-- AUTO_INCREMENT for table `movie_media`
+--
+ALTER TABLE `movie_media`
+  MODIFY `movie_media_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `people`
@@ -3567,21 +3604,19 @@ ALTER TABLE `songs`
 --
 
 --
--- Constraints for table `movie_data`
---
-ALTER TABLE `movie_data`
-  ADD CONSTRAINT `movie_data_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
-
---
 -- Constraints for table `movie_anagrams`
 --
 ALTER TABLE `movie_anagrams`
   ADD CONSTRAINT `movie_anagrams_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
 
 --
--- Constraints for table `movie_anagrams`
+-- Constraints for table `movie_data`
+--
+ALTER TABLE `movie_data`
+  ADD CONSTRAINT `movie_data_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `movie_numbers`
 --
 ALTER TABLE `movie_numbers`
   ADD CONSTRAINT `movie_numbers_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`) ON DELETE CASCADE ON UPDATE CASCADE;

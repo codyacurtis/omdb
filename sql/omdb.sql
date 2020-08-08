@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 28, 2020 at 02:53 AM
+-- Generation Time: Aug 08, 2020 at 06:20 AM
 -- Server version: 10.4.13-MariaDB
 -- PHP Version: 7.4.7
 
@@ -21,12 +21,25 @@ SET time_zone = "+00:00";
 -- Database: `omdb`
 --
 
+DELIMITER $$
+--
+-- Procedures
+--
+DROP PROCEDURE IF EXISTS `getMovieId`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getMovieId` (IN `mprName` VARCHAR(150) CHARSET utf8mb4, IN `mprYear` YEAR(4))  NO SQL
+SELECT movies.movie_id 
+FROM movies 
+WHERE movies.native_name = mprName COLLATE utf8mb4_unicode_ci AND movies.year_made = mprYear$$
+
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `movies`
 --
 
+DROP TABLE IF EXISTS `movies`;
 CREATE TABLE `movies` (
   `movie_id` int(6) NOT NULL,
   `native_name` varchar(180) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3040,14 +3053,7 @@ INSERT INTO `movies` (`movie_id`, `native_name`, `english_name`, `year_made`) VA
 (2996, 'A Cinderella Story: If the Shoe Fits', 'A Cinderella Story: If the Shoe Fits', 2016),
 (2997, 'Blue Jay', 'Blue Jay', 2016),
 (2998, 'La La Land', 'La La Land', 2016),
-(2999, '13th', '13th', 2016),
-(3000, 'The Siege of Jadotville', 'The Siege of Jadotville', 2016),
-(3001, 'Vincent N Roxxy', 'Vincent N Roxxy', 2016),
-(3002, 'Brother Nature', 'Brother Nature', 2016),
-(3003, 'Barbie: Spy Squad', 'Barbie: Spy Squad', 2016),
-(3004, 'Allied', 'Allied', 2016),
-(3005, 'The Monster', 'The Monster', 2016),
-(3006, 'test7', 'test7', 2000);
+(2999, '13th', '13th', 2016);
 
 -- --------------------------------------------------------
 
@@ -3055,6 +3061,7 @@ INSERT INTO `movies` (`movie_id`, `native_name`, `english_name`, `year_made`) VA
 -- Table structure for table `movie_anagrams`
 --
 
+DROP TABLE IF EXISTS `movie_anagrams`;
 CREATE TABLE `movie_anagrams` (
   `movie_id` int(6) NOT NULL COMMENT 'movie_anagrams is a WEAK entity. movie_id is both PK and FK',
   `anagram` varchar(180) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'anagram of native name'
@@ -3066,6 +3073,7 @@ CREATE TABLE `movie_anagrams` (
 -- Table structure for table `movie_data`
 --
 
+DROP TABLE IF EXISTS `movie_data`;
 CREATE TABLE `movie_data` (
   `movie_id` int(6) NOT NULL COMMENT 'This is both PK and FK; movie_data is a WEAK entity',
   `language` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3084,8 +3092,7 @@ INSERT INTO `movie_data` (`movie_id`, `language`, `country`, `genre`, `plot`, `t
 (2, 'ENG', 'US', 'Horror', 'Chris and his girlfriend Rose go upstate to visit her parents for the weekend. At first, Chris reads the family\'s overly accommodating behavior as nervous attempts to deal with their daughter\'s interracial relationship, but as the weekend progresses, a series of increasingly disturbing discoveries lead him to a truth that he never could have imagined.', ''),
 (3, 'ENG', 'US', 'Musical', 'Following their win at the world championship, the now separated Bellas reunite for one last singing competition at an overseas USO tour, but face a group who uses both instruments and voices.', ''),
 (4, 'ENG', 'US', 'drama', 'In Texas, after the death of his mother, the unemployed oil and gas worker Toby Howard is losing his ranch to the Texas Midlands Bank. Toby is divorced from his wife who lives with their two sons. When his brother Tanner Howard is released from the prison, they team up to rob agencies of the Texas Midlands Bank to raise money to pay the loan so that Toby may leave the real estate to his sons.', ''),
-(5, 'ENG', 'US', 'action, drama', 'When Beth Emhoff (Gwyneth Paltrow) returns to Minnesota from a Hong Kong business trip, she attributes the malaise she feels to jet lag. However, two days later, Beth is dead, and doctors tell her shocked husband (Matt Damon) that they have no idea what killed her. Soon, many others start to exhibit the same symptoms, and a global pandemic explodes. Doctors try to contain the lethal microbe, but society begins to collapse as a blogger (Jude Law) fans the flames of paranoia.\r\n', ''),
-(3006, 'EN', 'USA', 'test7', 'test7', 'test7');
+(5, 'ENG', 'US', 'action, drama', 'When Beth Emhoff (Gwyneth Paltrow) returns to Minnesota from a Hong Kong business trip, she attributes the malaise she feels to jet lag. However, two days later, Beth is dead, and doctors tell her shocked husband (Matt Damon) that they have no idea what killed her. Soon, many others start to exhibit the same symptoms, and a global pandemic explodes. Doctors try to contain the lethal microbe, but society begins to collapse as a blogger (Jude Law) fans the flames of paranoia.\r\n', '');
 
 -- --------------------------------------------------------
 
@@ -3093,6 +3100,7 @@ INSERT INTO `movie_data` (`movie_id`, `language`, `country`, `genre`, `plot`, `t
 -- Table structure for table `movie_keywords`
 --
 
+DROP TABLE IF EXISTS `movie_keywords`;
 CREATE TABLE `movie_keywords` (
   `movie_id` int(6) NOT NULL,
   `keyword` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -3118,7 +3126,8 @@ INSERT INTO `movie_keywords` (`movie_id`, `keyword`) VALUES
 (5, 'infection'),
 (5, 'outbreak'),
 (5, 'virus'),
-(3006, 'test7');
+(3006, 'test7'),
+(3007, 'test8');
 
 -- --------------------------------------------------------
 
@@ -3126,6 +3135,7 @@ INSERT INTO `movie_keywords` (`movie_id`, `keyword`) VALUES
 -- Table structure for table `movie_media`
 --
 
+DROP TABLE IF EXISTS `movie_media`;
 CREATE TABLE `movie_media` (
   `movie_media_id` int(6) NOT NULL,
   `m_link` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3148,7 +3158,8 @@ INSERT INTO `movie_media` (`movie_media_id`, `m_link`, `m_link_type`, `movie_id`
 (8, 'joker_poster.jpg', 'poster', 1),
 (9, 'https://rb.gy/v21usc', 'Poster', 5),
 (10, 'https://www.youtube.com/watch?v=4sYSyuuLk5g', 'Trailer', 5),
-(11, 'test7', 'test7', 3006);
+(11, 'test7', 'test7', 3006),
+(12, 'test8', 'test8', 3007);
 
 -- --------------------------------------------------------
 
@@ -3156,6 +3167,7 @@ INSERT INTO `movie_media` (`movie_media_id`, `m_link`, `m_link_type`, `movie_id`
 -- Table structure for table `movie_numbers`
 --
 
+DROP TABLE IF EXISTS `movie_numbers`;
 CREATE TABLE `movie_numbers` (
   `movie_id` int(6) NOT NULL COMMENT 'This is both PK and FK; movie_numbers is a WEAK entity',
   `running_time` int(3) DEFAULT NULL COMMENT 'Running Time in Minutes',
@@ -3172,6 +3184,7 @@ CREATE TABLE `movie_numbers` (
 -- Table structure for table `movie_people`
 --
 
+DROP TABLE IF EXISTS `movie_people`;
 CREATE TABLE `movie_people` (
   `movie_id` int(6) NOT NULL,
   `people_id` int(6) NOT NULL,
@@ -3214,6 +3227,7 @@ INSERT INTO `movie_people` (`movie_id`, `people_id`, `role`, `character_name`) V
 -- Table structure for table `movie_quotes`
 --
 
+DROP TABLE IF EXISTS `movie_quotes`;
 CREATE TABLE `movie_quotes` (
   `movie_id` int(6) NOT NULL,
   `quote` varchar(750) NOT NULL
@@ -3225,6 +3239,7 @@ CREATE TABLE `movie_quotes` (
 -- Table structure for table `movie_song`
 --
 
+DROP TABLE IF EXISTS `movie_song`;
 CREATE TABLE `movie_song` (
   `movie_id` int(6) NOT NULL,
   `song_id` int(6) NOT NULL
@@ -3247,6 +3262,7 @@ INSERT INTO `movie_song` (`movie_id`, `song_id`) VALUES
 -- Table structure for table `movie_trivia`
 --
 
+DROP TABLE IF EXISTS `movie_trivia`;
 CREATE TABLE `movie_trivia` (
   `movie_id` int(6) NOT NULL,
   `trivia` varchar(750) NOT NULL
@@ -3272,6 +3288,7 @@ INSERT INTO `movie_trivia` (`movie_id`, `trivia`) VALUES
 -- Stand-in structure for view `movie_viewtable`
 -- (See below for the actual view)
 --
+DROP VIEW IF EXISTS `movie_viewtable`;
 CREATE TABLE `movie_viewtable` (
 `movie_id` int(6)
 ,`native_name` varchar(180)
@@ -3293,9 +3310,196 @@ CREATE TABLE `movie_viewtable` (
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `movie_viewtable2`
+-- (See below for the actual view)
+--
+DROP VIEW IF EXISTS `movie_viewtable2`;
+CREATE TABLE `movie_viewtable2` (
+`movie_id` int(6)
+,`native_name` varchar(180)
+,`english_name` varchar(180)
+,`year_made` year(4)
+,`tag_line` varchar(500)
+,`language` varchar(10)
+,`country` varchar(20)
+,`genre` varchar(15)
+,`plot` varchar(500)
+,`cast` mediumtext
+,`keyword_list` mediumtext
+,`trivia_cat` mediumtext
+,`m_link_type` varchar(11)
+,`m_link` varchar(100)
+,`title` varchar(100)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mpr_test_data`
+--
+
+DROP TABLE IF EXISTS `mpr_test_data`;
+CREATE TABLE `mpr_test_data` (
+  `id` int(6) NOT NULL,
+  `native_name` varchar(180) NOT NULL,
+  `year_made` year(4) NOT NULL,
+  `stage_name` varchar(30) NOT NULL,
+  `role` varchar(20) NOT NULL,
+  `screen_name` varchar(30) NOT NULL,
+  `execution_status` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `mpr_test_data`
+--
+
+INSERT INTO `mpr_test_data` (`id`, `native_name`, `year_made`, `stage_name`, `role`, `screen_name`, `execution_status`) VALUES
+(1, 'Hunk', 1987, 'Brad Pitt', 'Leading Actor', 'Guy at beach with drink', 'To Be Processed'),
+(2, 'No Way Out', 1987, 'Brad Pitt', 'Leading Actor', 'Black-tie party guest', 'To Be Processed'),
+(3, 'No Man\'s Land', 1987, 'Brad Pitt', 'Leading Actor', 'Waiter', 'To Be Processed'),
+(4, 'Less Than Zero', 1987, 'Brad Pitt', 'Leading Actor', 'Partygoer/Preppie guy at fight', 'To Be Processed'),
+(5, 'The Dark Side of the Sun', 1988, 'Brad Pitt', 'Leading Actor', 'Rick', 'To Be Processed'),
+(6, 'Happy Together', 1989, 'Brad Pitt', 'Leading Actor', 'Brian', 'To Be Processed'),
+(7, 'Cutting Class', 1989, 'Brad Pitt', 'Leading Actor', 'Dwight Ingalls', 'To Be Processed'),
+(8, 'Across the Tracks', 1991, 'Brad Pitt', 'Leading Actor', 'Joe Maloney', 'To Be Processed'),
+(9, 'Thelma & Louise', 1991, 'Brad Pitt', 'Leading Actor', 'J.D.', 'To Be Processed'),
+(10, 'Johnny Suede', 1991, 'Brad Pitt', 'Leading Actor', 'Johnny Suede', 'To Be Processed'),
+(11, 'Contact', 1992, 'Brad Pitt', 'Leading Actor', 'Cox', 'To Be Processed'),
+(12, 'Cool World', 1992, 'Brad Pitt', 'Leading Actor', 'Frank Harris', 'To Be Processed'),
+(13, 'A River Runs Through It', 1992, 'Brad Pitt', 'Leading Actor', 'Paul Maclean', 'To Be Processed'),
+(14, 'Kalifornia', 1993, 'Brad Pitt', 'Leading Actor', 'Early Grayce', 'To Be Processed'),
+(15, 'True Romance', 1993, 'Brad Pitt', 'Leading Actor', 'Floyd', 'To Be Processed'),
+(16, 'The Favor', 1994, 'Brad Pitt', 'Leading Actor', 'Elliott Fowler', 'To Be Processed'),
+(17, 'Interview with the Vampire', 1994, 'Brad Pitt', 'Leading Actor', 'Louis de Pointe du Lac', 'To Be Processed'),
+(18, 'Legends of the Fall', 1994, 'Brad Pitt', 'Leading Actor', 'Tristan Ludlow', 'To Be Processed'),
+(19, 'Seven', 1995, 'Brad Pitt', 'Leading Actor', 'David Mills', 'To Be Processed'),
+(20, '12 Monkeys', 1995, 'Brad Pitt', 'Leading Actor', 'Jeffrey Goines', 'To Be Processed'),
+(21, 'Sleepers', 1996, 'Brad Pitt', 'Leading Actor', 'Michael Sullivan', 'To Be Processed'),
+(22, 'The Devil\'s Own', 1997, 'Brad Pitt', 'Leading Actor', 'Rory Devaney?(Francis Austin M', 'To Be Processed'),
+(23, 'Seven Years in Tibet', 1997, 'Brad Pitt', 'Leading Actor', 'Heinrich Harrer', 'To Be Processed'),
+(24, 'Meet Joe Black', 1998, 'Brad Pitt', 'Leading Actor', 'Young Man in Coffee Shop/The D', 'To Be Processed'),
+(25, 'Fight Club', 1999, 'Brad Pitt', 'Leading Actor', 'Tyler Durden', 'To Be Processed'),
+(26, 'Being John Malkovich', 1999, 'Brad Pitt', 'Leading Actor', 'Himself', 'To Be Processed'),
+(27, 'Snatch', 2000, 'Brad Pitt', 'Leading Actor', 'Mickey O\'Neil', 'To Be Processed'),
+(28, 'The Mexican', 2001, 'Brad Pitt', 'Leading Actor', 'Jerry Welbach', 'To Be Processed'),
+(29, 'Spy Game', 2001, 'Brad Pitt', 'Leading Actor', 'Tom Bishop', 'To Be Processed'),
+(30, 'Ocean\'s Eleven', 2001, 'Brad Pitt', 'Leading Actor', 'Rusty Ryan', 'To Be Processed'),
+(31, 'Confessions of a Dangerous Mind', 2002, 'Brad Pitt', 'Leading Actor', 'Brad', 'To Be Processed'),
+(32, 'Sinbad: Legend of the Seven Seas', 2003, 'Brad Pitt', 'Leading Actor', 'Sinbad?(Voice)', 'To Be Processed'),
+(33, 'Troy', 2004, 'Brad Pitt', 'Leading Actor', 'Achilles', 'To Be Processed'),
+(34, 'Ocean\'s Twelve', 2004, 'Brad Pitt', 'Leading Actor', 'Rusty Ryan', 'To Be Processed'),
+(35, 'Mr. & Mrs. Smith', 2005, 'Brad Pitt', 'Leading Actor', 'John Smith', 'To Be Processed'),
+(36, 'God Grew Tired of Us', 2006, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(37, 'The Departed', 2006, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(38, 'Running with Scissors', 2006, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(39, 'Babel', 2006, 'Brad Pitt', 'Leading Actor', 'Richard Jones', 'To Be Processed'),
+(40, 'The Tehuacan Project', 2007, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(41, 'Year of the Dog', 2007, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(42, 'A Mighty Heart', 2007, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(43, 'Ocean\'s Thirteen', 2007, 'Brad Pitt', 'Leading Actor', 'Rusty Ryan', 'To Be Processed'),
+(44, 'The Assassination of Jesse James', 2007, 'Brad Pitt', 'Leading Actor', 'Jesse James', 'To Be Processed'),
+(45, 'by the Coward Robert Ford', 0000, 'Brad Pitt', 'Leading Actor', '', 'To Be Processed'),
+(46, 'Burn After Reading', 2008, 'Brad Pitt', 'Leading Actor', 'Chad Feldheimer', 'To Be Processed'),
+(47, 'The Curious Case of Benjamin Button', 2008, 'Brad Pitt', 'Leading Actor', 'Benjamin Button', 'To Be Processed'),
+(48, 'Inglourious Basterds', 2009, 'Brad Pitt', 'Leading Actor', 'Lt. Aldo Raine', 'To Be Processed'),
+(49, 'The Time Traveler\'s Wife', 2009, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(50, 'The Private Lives of Pippa Lee', 2009, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(51, 'Megamind', 2010, 'Brad Pitt', 'Leading Actor', 'Metro Man (Voice)', 'To Be Processed'),
+(52, 'Kick-Ass', 2010, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(53, 'Eat Pray Love', 2010, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(54, 'The Tree of Life', 2011, 'Brad Pitt', 'Leading Actor', 'O\'Brien', 'To Be Processed'),
+(55, 'Moneyball', 2011, 'Brad Pitt', 'Leading Actor', 'Billy Beane', 'To Be Processed'),
+(56, 'Happy Feet Two', 2011, 'Brad Pitt', 'Leading Actor', 'Will the Krill (Voice)', 'To Be Processed'),
+(57, 'Killing Them Softly', 2012, 'Brad Pitt', 'Leading Actor', 'Jackie Cogan', 'To Be Processed'),
+(58, 'World War Z', 2013, 'Brad Pitt', 'Leading Actor', 'Gerry Lane', 'To Be Processed'),
+(59, 'Kick-Ass 2', 2013, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(60, 'Big Men', 2013, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(61, 'The Counselor', 2013, 'Brad Pitt', 'Leading Actor', 'Westray', 'To Be Processed'),
+(62, 'Fury', 2014, 'Brad Pitt', 'Leading Actor', 'Don \"Wardaddy\" Collier', 'To Be Processed'),
+(63, 'Selma', 2014, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(64, 'True Story', 2015, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(65, 'The Audition', 2015, 'Brad Pitt', 'Leading Actor', 'Himself', 'To Be Processed'),
+(66, 'By the Sea', 2015, 'Brad Pitt', 'Leading Actor', 'Roland', 'To Be Processed'),
+(67, 'Hitting the Apex', 2015, 'Brad Pitt', 'Leading Actor', 'Narrator', 'To Be Processed'),
+(68, 'The Big Short', 2015, 'Brad Pitt', 'Leading Actor', 'Ben Rickert', 'To Be Processed'),
+(69, 'Moonlight', 2016, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(70, 'Voyage of Time', 2016, 'Brad Pitt', 'Leading Actor', 'Narrator (Voice)', 'To Be Processed'),
+(71, 'Allied', 2016, 'Brad Pitt', 'Leading Actor', 'Max Vatan', 'To Be Processed'),
+(72, 'Okja', 2017, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(73, 'War Machine', 2017, 'Brad Pitt', 'Leading Actor', 'Gen. Glen McMahon', 'To Be Processed'),
+(74, 'Brad\'s Status', 2017, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(75, 'Deadpool 2', 2018, 'Brad Pitt', 'Leading Actor', 'Telford Porter/Vanisher', 'To Be Processed'),
+(76, 'Beautiful Boy', 2018, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(77, 'If Beale Street Could Talk', 2018, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(78, 'Vice', 2018, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(79, 'The Last Black Man in San Francisco', 2019, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(80, 'Once Upon a Time in Hollywood', 2019, 'Brad Pitt', 'Leading Actor', 'Cliff Booth', 'To Be Processed'),
+(81, 'The King', 2019, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(82, 'Ad Astra', 2019, 'Brad Pitt', 'Leading Actor', 'Major Roy McBride', 'To Be Processed'),
+(83, 'Kajillionaire', 2020, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(84, 'Irresistible', 2020, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(85, 'Blonde', 2020, 'Brad Pitt', 'Leading Actor', '?', 'To Be Processed'),
+(86, 'Trudell', 2005, 'Angeline Jolie', 'Executive producer', '?', 'To Be Processed'),
+(87, 'Confessions of an Action Star', 2005, 'Angeline Jolie', 'Cameo', '?', 'To Be Processed'),
+(88, 'A Place in Time?', 2007, 'Angeline Jolie', 'Director and produce', '?', 'To Be Processed'),
+(89, 'In the Land of Blood and Honey', 2011, 'Angeline Jolie', 'Director, writer and', '?', 'To Be Processed'),
+(90, 'Difret', 2014, 'Angeline Jolie', 'Executive producer', '?', 'To Be Processed'),
+(91, 'Unbroken', 2014, 'Angeline Jolie', 'Director and produce', '?', 'To Be Processed'),
+(92, 'First They Killed My Father', 2017, 'Angeline Jolie', 'Director, writer and', '?', 'To Be Processed'),
+(93, 'The Breadwinner', 2017, 'Angeline Jolie', 'Executive producer', '?', 'To Be Processed'),
+(94, 'Serendipity?', 2019, 'Angeline Jolie', 'Executive producer', '?', 'To Be Processed'),
+(95, 'Hackers', 1995, 'Angeline Jolie', '', 'Acid Burn', 'To Be Processed'),
+(96, 'Alice & Viril', 1993, 'Angeline Jolie', 'Short film', 'Alice', 'To Be Processed'),
+(97, 'Angela & Viril', 1993, 'Angeline Jolie', 'Short film', 'Angela', 'To Be Processed'),
+(98, 'Pushing Tin', 1999, 'Angeline Jolie', '', 'Mary Bell', 'To Be Processed'),
+(99, 'Playing God', 1997, 'Angeline Jolie', '', 'Claire', 'To Be Processed'),
+(100, 'Changeling', 2008, 'Angeline Jolie', '', 'Christine Collins', 'To Be Processed'),
+(101, 'Sky Captain and the World of Tomorrow', 2004, 'Angeline Jolie', '', 'Franky Cook', 'To Be Processed'),
+(102, 'Lara Croft: Tomb Raider', 2001, 'Angeline Jolie', '', 'Lara Croft', 'To Be Processed'),
+(103, 'Lara Croft: Tomb Raider ? The Cradle of Life', 2003, 'Angeline Jolie', '', 'Lara Croft', 'To Be Processed'),
+(104, 'The Bone Collector', 1999, 'Angeline Jolie', '', 'Amelia Donaghy', 'To Be Processed'),
+(105, 'Mojave Moon', 1996, 'Angeline Jolie', '', 'Ellie', 'To Be Processed'),
+(106, 'Wanted', 2008, 'Angeline Jolie', '', 'Fox', 'To Be Processed'),
+(107, 'Beowulf', 2007, 'Angeline Jolie', '', 'Grendel\'s mother', 'To Be Processed'),
+(108, 'Those Who Wish Me Dead?', 2020, 'Angeline Jolie', 'Post-production', 'Hannah Faber', 'To Be Processed'),
+(109, 'Playing by Heart', 1998, 'Angeline Jolie', '', 'Joan', 'To Be Processed'),
+(110, 'Beyond Borders', 2003, 'Angeline Jolie', '', 'Sarah Jordan', 'To Be Processed'),
+(111, 'Life or Something Like It', 2002, 'Angeline Jolie', '', 'Lanie Kerrigan', 'To Be Processed'),
+(112, 'Foxfire', 1996, 'Angeline Jolie', '', 'Legs Sadovsky', 'To Be Processed'),
+(113, 'Girl, Interrupted', 1999, 'Angeline Jolie', '', 'Lisa Rowe', 'To Be Processed'),
+(114, 'Shark Tale', 2004, 'Angeline Jolie', '', 'Lola (voice)', 'To Be Processed'),
+(115, 'Love Is All There Is', 1996, 'Angeline Jolie', '', 'Gina Malacici', 'To Be Processed'),
+(116, 'Maleficent', 2014, 'Angeline Jolie', 'Executive producer', 'Maleficent', 'To Be Processed'),
+(117, 'Maleficent: Mistress of Evil', 2019, 'Angeline Jolie', 'Also producer', 'Maleficent', 'To Be Processed'),
+(118, 'The Good Shepherd', 2006, 'Angeline Jolie', '', 'Margaret \"Clover\" Russell Wils', 'To Be Processed'),
+(119, 'Kung Fu Panda', 2008, 'Angeline Jolie', '', 'Master Tigress (voice)', 'To Be Processed'),
+(120, 'Kung Fu Panda 2', 2011, 'Angeline Jolie', '', 'Master Tigress (voice)', 'To Be Processed'),
+(121, 'Kung Fu Panda: Secrets of the Masters', 2011, 'Angeline Jolie', '', 'Master Tigress (voice)', 'To Be Processed'),
+(122, 'Kung Fu Panda 3', 2016, 'Angeline Jolie', '', 'Master Tigress (voice)', 'To Be Processed'),
+(123, 'Hell\'s Kitchen', 1998, 'Angeline Jolie', '', 'Gloria McNeary', 'To Be Processed'),
+(124, 'Alexander', 2004, 'Angeline Jolie', '', 'Olympias', 'To Be Processed'),
+(125, 'A Mighty Heart', 2007, 'Angeline Jolie', '', 'Mariane Pearl', 'To Be Processed'),
+(126, 'Cyborg 2', 1993, 'Angeline Jolie', '', 'Casella \"Cash\" Reese', 'To Be Processed'),
+(127, 'The Fever', 2004, 'Angeline Jolie', 'Cameo', 'Revolutionary', 'To Be Processed'),
+(128, 'Come Away', 2020, 'Angeline Jolie', '', 'Rose', 'To Be Processed'),
+(129, 'Original Sin', 2001, 'Angeline Jolie', '', 'Julia Russell', 'To Be Processed'),
+(130, 'Salt', 2010, 'Angeline Jolie', '', 'Evelyn Salt', 'To Be Processed'),
+(131, 'Taking Lives', 2004, 'Angeline Jolie', '', 'Illeana Scott', 'To Be Processed'),
+(132, 'Mr. & Mrs. Smith', 2005, 'Angeline Jolie', '', 'Jane Smith', 'To Be Processed'),
+(133, 'The One and Only Ivan?', 2020, 'Angeline Jolie', 'Post-production; als', 'Stella (voice)', 'To Be Processed'),
+(134, 'Without Evidence', 1996, 'Angeline Jolie', '', 'Jodie Swearingen', 'To Be Processed'),
+(135, 'The Tourist', 2010, 'Angeline Jolie', '', 'Elise Clifton-Ward', 'To Be Processed'),
+(136, 'The Eternals?', 2021, 'Angeline Jolie', 'Post-production', 'Thena', 'To Be Processed'),
+(137, 'Lookin\' to Get Out', 1982, 'Angeline Jolie', 'Credited as Angelina', 'Tosh', 'To Be Processed'),
+(138, 'Gone in 60 Seconds', 2000, 'Angeline Jolie', '', 'Sara \"Sway\" Wayland', 'To Be Processed');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `people`
 --
 
+DROP TABLE IF EXISTS `people`;
 CREATE TABLE `people` (
   `people_id` int(6) NOT NULL,
   `screen_name` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Many people in the movie industry are known by short names',
@@ -3345,6 +3549,7 @@ INSERT INTO `people` (`people_id`, `screen_name`, `first_name`, `middle_name`, `
 -- Table structure for table `people_trivia`
 --
 
+DROP TABLE IF EXISTS `people_trivia`;
 CREATE TABLE `people_trivia` (
   `people_id` int(6) NOT NULL,
   `people_trivia` varchar(750) NOT NULL
@@ -3356,6 +3561,7 @@ CREATE TABLE `people_trivia` (
 -- Table structure for table `songs`
 --
 
+DROP TABLE IF EXISTS `songs`;
 CREATE TABLE `songs` (
   `song_id` int(6) NOT NULL,
   `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3380,6 +3586,7 @@ INSERT INTO `songs` (`song_id`, `title`, `lyrics`, `theme`) VALUES
 -- Table structure for table `song_keywords`
 --
 
+DROP TABLE IF EXISTS `song_keywords`;
 CREATE TABLE `song_keywords` (
   `song_id` int(5) NOT NULL,
   `keyword` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -3405,6 +3612,7 @@ INSERT INTO `song_keywords` (`song_id`, `keyword`) VALUES
 -- Table structure for table `song_media`
 --
 
+DROP TABLE IF EXISTS `song_media`;
 CREATE TABLE `song_media` (
   `song_media_id` int(6) NOT NULL,
   `s_link` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3429,6 +3637,7 @@ INSERT INTO `song_media` (`song_media_id`, `s_link`, `s_link_type`, `song_id`) V
 -- Table structure for table `song_people`
 --
 
+DROP TABLE IF EXISTS `song_people`;
 CREATE TABLE `song_people` (
   `song_id` int(6) NOT NULL,
   `people_id` int(6) NOT NULL,
@@ -3451,6 +3660,7 @@ INSERT INTO `song_people` (`song_id`, `people_id`, `role`) VALUES
 -- Table structure for table `song_trivia`
 --
 
+DROP TABLE IF EXISTS `song_trivia`;
 CREATE TABLE `song_trivia` (
   `song_id` int(6) NOT NULL,
   `song_trivia` varchar(750) NOT NULL
@@ -3463,7 +3673,18 @@ CREATE TABLE `song_trivia` (
 --
 DROP TABLE IF EXISTS `movie_viewtable`;
 
+DROP VIEW IF EXISTS `movie_viewtable`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `movie_viewtable`  AS  select `movies`.`movie_id` AS `movie_id`,`movies`.`native_name` AS `native_name`,`movies`.`english_name` AS `english_name`,`movies`.`year_made` AS `year_made`,`movie_data`.`tag_line` AS `tag_line`,`movie_data`.`language` AS `language`,`movie_data`.`country` AS `country`,`movie_data`.`genre` AS `genre`,`movie_data`.`plot` AS `plot`,`cast_list`.`CAST` AS `cast`,`keywords_list`.`keyword_list` AS `keyword_list`,`trivia_list`.`trivia_cat` AS `trivia_cat`,`movie_media`.`m_link_type` AS `m_link_type`,`movie_media`.`m_link` AS `m_link`,`soundtrack_list`.`title` AS `title` from ((((((`movies` left join `movie_data` on(`movies`.`movie_id` = `movie_data`.`movie_id`)) left join (select `people_list`.`movie_id` AS `movie_id`,`people_list`.`screen_name` AS `screen_name`,`people_list`.`role` AS `role`,`people_list`.`image_name` AS `image_name`,group_concat(concat_ws(' - ',`people_list`.`role`,`people_list`.`screen_name`) separator '; ') AS `CAST` from (select `movie_people`.`movie_id` AS `movie_id`,`people`.`screen_name` AS `screen_name`,`movie_people`.`role` AS `role`,`people`.`image_name` AS `image_name` from (`movie_people` left join `people` on(`movie_people`.`people_id` = `people`.`people_id`))) `people_list`) `cast_list` on(`movies`.`movie_id` = `cast_list`.`movie_id`)) left join (select `song_list`.`movie_id` AS `movie_id`,`song_list`.`song_id` AS `song_id`,`song_list`.`title` AS `title`,group_concat(`song_list`.`title` separator ',') AS `soundtrack` from (select `movie_song`.`movie_id` AS `movie_id`,`movie_song`.`song_id` AS `song_id`,`songs`.`title` AS `title` from (`movie_song` left join `songs` on(`movie_song`.`song_id` = `songs`.`song_id`))) `song_list`) `soundtrack_list` on(`movies`.`movie_id` = `soundtrack_list`.`movie_id`)) left join (select `movie_keywords`.`movie_id` AS `movie_id`,`movie_keywords`.`keyword` AS `keyword`,group_concat(`movie_keywords`.`keyword` separator ', ') AS `keyword_list` from `movie_keywords` group by `movie_keywords`.`movie_id`) `keywords_list` on(`movies`.`movie_id` = `keywords_list`.`movie_id`)) left join (select `movie_trivia`.`movie_id` AS `movie_id`,`movie_trivia`.`trivia` AS `trivia`,group_concat(`movie_trivia`.`trivia` separator ', ') AS `trivia_cat` from `movie_trivia` group by `movie_trivia`.`movie_id`) `trivia_list` on(`movies`.`movie_id` = `trivia_list`.`movie_id`)) left join `movie_media` on(`movies`.`movie_id` = `movie_media`.`movie_id`)) where `movie_media`.`m_link_type` = 'poster' ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `movie_viewtable2`
+--
+DROP TABLE IF EXISTS `movie_viewtable2`;
+
+DROP VIEW IF EXISTS `movie_viewtable2`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `movie_viewtable2`  AS  select `movies`.`movie_id` AS `movie_id`,`movies`.`native_name` AS `native_name`,`movies`.`english_name` AS `english_name`,`movies`.`year_made` AS `year_made`,`movie_data`.`tag_line` AS `tag_line`,`movie_data`.`language` AS `language`,`movie_data`.`country` AS `country`,`movie_data`.`genre` AS `genre`,`movie_data`.`plot` AS `plot`,`cast_list`.`CAST` AS `cast`,`keywords_list`.`keyword_list` AS `keyword_list`,`trivia_list`.`trivia_cat` AS `trivia_cat`,`movie_media`.`m_link_type` AS `m_link_type`,`movie_media`.`m_link` AS `m_link`,`soundtrack_list`.`title` AS `title` from ((((((`movies` left join `movie_data` on(`movies`.`movie_id` = `movie_data`.`movie_id`)) left join (select `people_list`.`movie_id` AS `movie_id`,`people_list`.`screen_name` AS `screen_name`,`people_list`.`role` AS `role`,`people_list`.`image_name` AS `image_name`,group_concat(concat_ws(' - ',`people_list`.`role`,`people_list`.`screen_name`) separator '; ') AS `CAST` from (select `movie_people`.`movie_id` AS `movie_id`,`people`.`screen_name` AS `screen_name`,`movie_people`.`role` AS `role`,`people`.`image_name` AS `image_name` from (`movie_people` left join `people` on(`movie_people`.`people_id` = `people`.`people_id`))) `people_list`) `cast_list` on(`movies`.`movie_id` = `cast_list`.`movie_id`)) left join (select `song_list`.`movie_id` AS `movie_id`,`song_list`.`song_id` AS `song_id`,`song_list`.`title` AS `title`,group_concat(`song_list`.`title` separator ',') AS `soundtrack` from (select `movie_song`.`movie_id` AS `movie_id`,`movie_song`.`song_id` AS `song_id`,`songs`.`title` AS `title` from (`movie_song` left join `songs` on(`movie_song`.`song_id` = `songs`.`song_id`))) `song_list`) `soundtrack_list` on(`movies`.`movie_id` = `soundtrack_list`.`movie_id`)) left join (select `movie_keywords`.`movie_id` AS `movie_id`,`movie_keywords`.`keyword` AS `keyword`,group_concat(`movie_keywords`.`keyword` separator ', ') AS `keyword_list` from `movie_keywords` group by `movie_keywords`.`movie_id`) `keywords_list` on(`movies`.`movie_id` = `keywords_list`.`movie_id`)) left join (select `movie_trivia`.`movie_id` AS `movie_id`,`movie_trivia`.`trivia` AS `trivia`,group_concat(`movie_trivia`.`trivia` separator ', ') AS `trivia_cat` from `movie_trivia` group by `movie_trivia`.`movie_id`) `trivia_list` on(`movies`.`movie_id` = `trivia_list`.`movie_id`)) left join `movie_media` on(`movies`.`movie_id` = `movie_media`.`movie_id`)) where `movie_media`.`m_link_type` = 'poster' ;
 
 --
 -- Indexes for dumped tables
@@ -3473,7 +3694,8 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Indexes for table `movies`
 --
 ALTER TABLE `movies`
-  ADD PRIMARY KEY (`movie_id`);
+  ADD PRIMARY KEY (`movie_id`),
+  ADD KEY `movie_id` (`movie_id`);
 
 --
 -- Indexes for table `movie_anagrams`
@@ -3497,19 +3719,14 @@ ALTER TABLE `movie_keywords`
 -- Indexes for table `movie_media`
 --
 ALTER TABLE `movie_media`
-  ADD PRIMARY KEY (`movie_media_id`);
+  ADD PRIMARY KEY (`movie_media_id`),
+  ADD KEY `movie_media_id` (`movie_media_id`);
 
 --
 -- Indexes for table `movie_numbers`
 --
 ALTER TABLE `movie_numbers`
   ADD PRIMARY KEY (`movie_id`);
-
---
--- Indexes for table `movie_people`
---
-ALTER TABLE `movie_people`
-  ADD PRIMARY KEY (`movie_id`,`people_id`,`role`,`character_name`);
 
 --
 -- Indexes for table `movie_quotes`
@@ -3527,7 +3744,14 @@ ALTER TABLE `movie_song`
 -- Indexes for table `movie_trivia`
 --
 ALTER TABLE `movie_trivia`
-  ADD PRIMARY KEY (`movie_id`,`trivia`);
+  ADD PRIMARY KEY (`movie_id`,`trivia`),
+  ADD KEY `movie_id` (`movie_id`);
+
+--
+-- Indexes for table `mpr_test_data`
+--
+ALTER TABLE `mpr_test_data`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `people`
@@ -3579,13 +3803,19 @@ ALTER TABLE `song_trivia`
 -- AUTO_INCREMENT for table `movies`
 --
 ALTER TABLE `movies`
-  MODIFY `movie_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3007;
+  MODIFY `movie_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=208783;
 
 --
 -- AUTO_INCREMENT for table `movie_media`
 --
 ALTER TABLE `movie_media`
-  MODIFY `movie_media_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `movie_media_id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `mpr_test_data`
+--
+ALTER TABLE `mpr_test_data`
+  MODIFY `id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 
 --
 -- AUTO_INCREMENT for table `people`
